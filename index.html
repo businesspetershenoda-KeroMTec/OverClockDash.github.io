@@ -3,415 +3,528 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OverClockDash</title>
+    <title>OverClockDash: Runner - Official Website</title>
     <style>
+        /* --- Cyberpunk Palette & Reset --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg-dark: #09090e;
+            --bg-card: rgba(18, 11, 32, 0.75);
+            --neon-cyan: #00ffcc;
+            --neon-pink: #ff007f;
+            --neon-purple: #9d4edd;
+            --text-main: #f0edff;
+            --text-muted: #9a8fbc;
         }
         body {
-            background-color: #0d0d1a;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-        h1 {
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-        }
-        #gameContainer {
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 255, 204, 0.3);
-            border: 4px solid #3d1e6d;
-            border-radius: 8px;
-        }
-        canvas {
-            display: block;
-            background: #140526;
-        }
-        #uiOverlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(13, 13, 26, 0.85);
-            pointer-events: auto;
-            transition: opacity 0.3s;
-        }
-        .menu-btn {
-            background: transparent;
-            border: 2px solid #ff007f;
-            color: #ff007f;
-            padding: 12px 30px;
-            font-size: 20px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 0 10px rgba(255, 0, 127, 0.2);
-            transition: all 0.2s ease;
-            margin-top: 20px;
-        }
-        .menu-btn:hover {
-            background: #ff007f;
-            color: #fff;
-            box-shadow: 0 0 20px #ff007f;
-        }
-        #instructions {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #a0a0c0;
-            text-align: center;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
             line-height: 1.6;
         }
-        .hidden {
-            display: none !important;
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d061a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 5px;
+            border: 2px solid #0d061a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-pink);
+        }
+
+        /* --- Header / Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(9, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        nav ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-cyan);
+            transition: width 0.3s ease;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+        }
+
+        /* --- Hero Section with Splash Image Background --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.4), rgba(9, 9, 14, 0.95)), 
+                        url('SPlash2.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+        .hero-content {
+            max-width: 850px;
+            z-index: 10;
+            padding: 40px;
+            background: rgba(18, 11, 32, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 0, 127, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.8), 0 0 40px rgba(255, 0, 127, 0.5);
+        }
+        .hero .subtitle {
+            font-size: 18px;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+        .hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 35px auto;
+        }
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: #fff;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.7);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-cyan);
+            padding: 14px 35px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- Section Shared Style --- */
+        section {
+            padding: 100px 10%;
+            position: relative;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title h2 {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            color: #fff;
+        }
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* --- About Section --- */
+        #about {
+            background: linear-gradient(180deg, rgba(9, 9, 14, 0.95) 0%, rgba(18, 10, 36, 1) 100%);
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            header { padding: 15px 20px; }
+            nav { display: none; }
+            .hero h1 { font-size: 36px; }
+        }
+        .about-img-frame {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.3);
+        }
+        .about-img-frame img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .about-img-frame:hover img {
+            transform: scale(1.04);
+        }
+        .about-text h3 {
+            font-size: 24px;
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* --- Features Section --- */
+        #features {
+            background: #0f0a1c;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(157, 78, 221, 0.15);
+            padding: 40px 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 25px rgba(0, 255, 204, 0.15);
+        }
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .feature-card h3 {
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* --- Company Info Section --- */
+        #company {
+            background: linear-gradient(180deg, #0f0a1c 0%, #06040a 100%);
+            border-top: 1px solid rgba(255, 0, 127, 0.1);
+        }
+        .company-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: rgba(18, 11, 32, 0.4);
+            border-radius: 16px;
+            padding: 50px 40px;
+            border: 1px solid rgba(157, 78, 221, 0.1);
+        }
+        .company-container p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .social-icon {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .social-icon:hover {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            background: rgba(255, 0, 127, 0.05);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #06040a;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #554e6c;
+            font-size: 14px;
+        }
+        footer p {
+            margin-bottom: 10px;
+        }
+        footer a {
+            color: #726894;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.2s;
+        }
+        footer a:hover {
+            color: var(--neon-cyan);
         }
     </style>
 </head>
 <body>
 
-    <h1>OverClockDash</h1>
+    <header>
+        <div class="logo-container">
+            <img src="Game icon (1).jpg" alt="OverClockDash Icon" class="logo-img" onerror="this.style.display='none'">
+            <span class="logo-text">OverClockDash</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#company">Studio</a></li>
+            </ul>
+        </nav>
+        <button class="nav-btn" onclick="window.location.href='#about'">Play Now</button>
+    </header>
 
-    <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="400"></canvas>
-        
-        <div id="uiOverlay">
-            <h2 id="menuTitle" style="color: #ff007f; font-size: 32px; text-shadow: 0 0 10px #ff007f;">SYSTEM BOOT</h2>
-            <p id="menuScore" class="hidden" style="margin-top: 10px; font-size: 18px; color: #00ffcc;"></p>
-            <button id="startBtn" class="menu-btn">Initialize</button>
-            <div id="instructions">
-                <strong>CONTROLS:</strong><br>
-                Press <b>W</b> or <b>UP ARROW</b> to Jump<br>
-                Press <b>S</b> or <b>DOWN ARROW</b> to Duck / Fast Fall
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>OVERCLOCKDASH: RUNNER</h1>
+            <div class="subtitle">An Endless 3D Adventure</div>
+            <p>
+                Strap into your jet-powered hover boots and accelerate through a vibrant cyberpunk skyline. 
+                Dodge megacity transit networks, evade hostile tracking security drones, and overclock your reflexes 
+                as the pace hits hyper-speed thresholds!
+            </p>
+            <div class="cta-group">
+                <a href="#about" class="btn-primary">Explore Game</a>
+                <a href="#features" class="btn-secondary">View Features</a>
             </div>
         </div>
-    </div>
+    </section>
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const uiOverlay = document.getElementById('uiOverlay');
-    const startBtn = document.getElementById('startBtn');
-    const menuTitle = document.getElementById('menuTitle');
-    const menuScore = document.getElementById('menuScore');
+    <section id="about">
+        <div class="section-title">
+            <h2>About The Game</h2>
+        </div>
+        <div class="about-grid">
+            <div class="about-img-frame">
+                <img src="Game icon (1).jpg" alt="OverClockDash Jet Boot Runner Gameplay Image" style="background: linear-gradient(135deg, #1f103c, #0a0514); min-height: 350px;">
+            </div>
+            <div class="about-text">
+                <h3>Thrive on the Grid</h3>
+                <p>
+                    Built on Unity's high-performance 3D engine, <b>OverClockDash: Runner</b> challenges players to survive 
+                    within a dynamically generated procedural synthwave environment. As you progress, the core processing units 
+                    overclock, constantly raising game speed and raising stakes.
+                </p>
+                <p>
+                    Master precision aerial flips, slide beneath low-clearance hyper-truck barricades, and utilize advanced power-up cores 
+                    to break through defense grids in a flawless loop of intense reaction-based action.
+                </p>
+            </div>
+        </div>
+    </section>
 
-    // Game variables
-    let gameActive = false;
-    let score = 0;
-    let gameSpeed = 6;
-    let maxSpeed = 15;
-    let acceleration = 0.001;
-    let obstacles = [];
-    let particles = [];
-    let frameCount = 0;
-    let spawnTimer = 0;
+    <section id="features">
+        <div class="section-title">
+            <h2>Core Features</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Overclock Engine</h3>
+                <p>The speed scales procedurally with your score tier. Adaptive physics keep the gameplay loop tightly tuned around rapid reflex maneuvers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Thruster Boots</h3>
+                <p>Harness jet-propulsion to glide across endless lanes, trigger mid-air adjustments, and execute vertical drops with pinpoint accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Dynamic Hazard AI</h3>
+                <p>Encounter random multi-lane configurations including heavy security transport trucks, sweeping drones, and high-voltage grid lines.</p>
+            </div>
+        </div>
+    </section>
 
-    // Environment Colors (Cyberpunk Neon Theme)
-    const COLORS = {
-        player: '#00ffcc',
-        playerTrail: 'rgba(0, 255, 252, 0.3)',
-        obstacleLow: '#ff007f',
-        obstacleHigh: '#ffff00',
-        ground: '#3d1e6d',
-        grid: '#240c3e'
-    };
+    <section id="company">
+        <div class="section-title">
+            <h2>The Studio</h2>
+        </div>
+        <div class="company-container">
+            <p>
+                We are an independent game studio dedicated to crafting polished, addictive arcade experiences with stunning 
+                cyberpunk aesthetics and immersive modern interactive engineering loops. Built by players, for players.
+            </p>
+            <div class="social-links">
+                <a href="https://github.com" class="social-icon" target="_blank">GitHub Project</a>
+                <a href="#" class="social-icon">Community Discord</a>
+                <a href="#" class="social-icon">Dev Logs</a>
+            </div>
+        </div>
+    </section>
 
-    // Player Object
-    const player = {
-        x: 100,
-        y: 300,
-        baseY: 300,
-        width: 40,
-        height: 60,
-        originalHeight: 60,
-        duckHeight: 30,
-        velocityY: 0,
-        gravity: 0.6,
-        jumpForce: -12,
-        isJumping: false,
-        isDucking: false,
+    <footer>
+        <p>&copy; 2026 OverClockDash Studio. All Rights Reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const navLi = document.querySelectorAll('nav ul li a');
         
-        jump() {
-            if (!this.isJumping && !this.isDucking) {
-                this.velocityY = this.jumpForce;
-                this.isJumping = true;
-            }
-        },
-        duck(isPressed) {
-            if (isPressed) {
-                this.isDucking = true;
-                this.height = this.duckHeight;
-                if (!this.isJumping) {
-                    this.y = this.baseY + (this.originalHeight - this.duckHeight);
-                } else {
-                    // Fast fall mechanism if pressing duck while jumping
-                    this.velocityY += 1.5; 
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
                 }
-            } else {
-                if (this.isDucking) {
-                    this.isDucking = false;
-                    this.height = this.originalHeight;
-                    if (!this.isJumping) {
-                        this.y = this.baseY;
-                    }
-                }
-            }
-        },
-        update() {
-            // Apply gravity
-            this.velocityY += this.gravity;
-            this.y += this.velocityY;
-
-            // Define floor level dynamically based on ducking state
-            let currentFloor = this.baseY;
-            if (this.isDucking) {
-                currentFloor = this.baseY + (this.originalHeight - this.duckHeight);
-            }
-
-            // Check floor collision
-            if (this.y >= currentFloor) {
-                this.y = currentFloor;
-                this.velocityY = 0;
-                this.isJumping = false;
-            }
-        },
-        draw() {
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = COLORS.player;
-            ctx.fillStyle = COLORS.player;
-            
-            // Draw player hit box
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-            
-            // Draw visor details
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(this.x + this.width - 12, this.y + 10, 12, 6);
-            ctx.shadowBlur = 0; // Reset shadow for efficiency
-        }
-    };
-
-    // Obstacle Generator
-    class Obstacle {
-        constructor() {
-            this.type = Math.random() > 0.4 ? 'low' : 'high'; // low = jump over, high = duck under
-            this.x = canvas.width;
-            this.width = 25 + Math.random() * 20;
-            
-            if (this.type === 'low') {
-                this.height = 40 + Math.random() * 30;
-                this.y = 360 - this.height; // Resting on ground
-                this.color = COLORS.obstacleLow;
-            } else {
-                this.height = 40;
-                this.y = 250; // Hovering obstacle
-                this.color = COLORS.obstacleHigh;
-            }
-        }
-        update() {
-            this.x -= gameSpeed;
-        }
-        draw() {
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = this.color;
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.x, this.y, this.width, this.height);
-            ctx.shadowBlur = 0;
-        }
-    }
-
-    // Particle Effect System
-    function spawnParticles(x, y, color) {
-        for (let i = 0; i < 15; i++) {
-            particles.push({
-                x: x,
-                y: y,
-                vx: (Math.random() - 0.5) * 8,
-                vy: (Math.random() - 0.5) * 8,
-                size: Math.random() * 4 + 2,
-                alpha: 1,
-                color: color
             });
-        }
-    }
 
-    function updateParticles() {
-        for (let i = particles.length - 1; i >= 0; i--) {
-            let p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.alpha -= 0.02;
-            if (p.alpha <= 0) {
-                particles.splice(i, 1);
-            } else {
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.fillRect(p.x, p.y, p.size, p.size);
-                ctx.restore();
-            }
-        }
-    }
-
-    // Input Handling
-    const keys = {};
-    window.addEventListener('keydown', e => {
-        keys[e.code] = true;
-        if (e.code === 'KeyW' || e.code === 'ArrowUp') player.jump();
-        if (e.code === 'KeyS' || e.code === 'ArrowDown') player.duck(true);
-    });
-
-    window.addEventListener('keyup', e => {
-        keys[e.code] = false;
-        if (e.code === 'KeyS' || e.code === 'ArrowDown') player.duck(false);
-    });
-
-    // Background Cyberpunk Grid Grid
-    let gridOffset = 0;
-    function drawBackground() {
-        ctx.strokeStyle = COLORS.grid;
-        ctx.lineWidth = 2;
-        
-        // Draw horizontal grid lines
-        for (let i = 200; i <= 360; i += 20) {
-            ctx.beginPath();
-            ctx.moveTo(0, i);
-            ctx.lineTo(canvas.width, i);
-            ctx.stroke();
-        }
-
-        // Moving vertical grid lines for depth
-        gridOffset = (gridOffset - gameSpeed) % 40;
-        for (let i = gridOffset; i < canvas.width; i += 40) {
-            ctx.beginPath();
-            ctx.moveTo(i, 200);
-            ctx.lineTo(i, 360);
-            ctx.stroke();
-        }
-
-        // Draw Ground Floor
-        ctx.fillStyle = COLORS.ground;
-        ctx.fillRect(0, 360, canvas.width, 40);
-        ctx.fillStyle = '#ff007f';
-        ctx.fillRect(0, 360, canvas.width, 2); // Glowing top floor line
-    }
-
-    // Core Collision Detection
-    function checkCollision(rect1, rect2) {
-        return rect1.x < rect2.x + rect2.width &&
-               rect1.x + rect1.width > rect2.x &&
-               rect1.y < rect2.y + rect2.height &&
-               rect1.y + rect1.height > rect2.y;
-    }
-
-    // Game Over Function
-    function gameOver() {
-        gameActive = false;
-        spawnParticles(player.x + player.width/2, player.y + player.height/2, COLORS.player);
-        
-        // Update UI
-        menuTitle.innerText = "SYSTEM CRASH";
-        menuScore.innerText = `DISTANCE ACHIEVED: ${Math.floor(score)}m`;
-        menuScore.classList.remove('hidden');
-        startBtn.innerText = "Reboot System";
-        uiOverlay.classList.remove('hidden');
-    }
-
-    // Reset loop
-    function startGame() {
-        score = 0;
-        gameSpeed = 6;
-        obstacles = [];
-        particles = [];
-        player.y = player.baseY;
-        player.velocityY = 0;
-        player.isJumping = false;
-        player.isDucking = false;
-        player.height = player.originalHeight;
-        gameActive = true;
-        uiOverlay.classList.add('hidden');
-    }
-
-    // Primary Game Loop
-    function loop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        drawBackground();
-
-        if (gameActive) {
-            // Speed incrementation (Overclocking mechanism)
-            if (gameSpeed < maxSpeed) {
-                gameSpeed += acceleration;
-            }
-
-            score += gameSpeed * 0.05;
-
-            // Spawning logic
-            spawnTimer--;
-            if (spawnTimer <= 0) {
-                obstacles.push(new Obstacle());
-                // randomize spawn frequency based on speed
-                spawnTimer = 80 + Math.random() * 60 - (gameSpeed * 2);
-            }
-
-            // Update & Draw Player
-            player.update();
-            player.draw();
-
-            // Handle Obstacles
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                let obs = obstacles[i];
-                obs.update();
-                obs.draw();
-
-                // Collision check
-                if (checkCollision(player, obs)) {
-                    spawnParticles(obs.x + obs.width/2, obs.y + obs.height/2, obs.color);
-                    gameOver();
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
                 }
-
-                // Delete offscreen obstacles
-                if (obs.x + obs.width < 0) {
-                    obstacles.splice(i, 1);
-                }
-            }
-
-            // Draw Real-time UI Text
-            ctx.fillStyle = '#00ffcc';
-            ctx.font = 'bold 16px "Courier New"';
-            ctx.fillText(`SCORE: ${Math.floor(score)}m`, 20, 40);
-            ctx.fillText(`SPEED: ${Math.floor(gameSpeed * 10)} MHz`, 630, 40);
-        } else {
-            // Even when dead, draw static states and particle updates
-            player.draw();
-            obstacles.forEach(o => o.draw());
-        }
-
-        updateParticles();
-        requestAnimationFrame(loop);
-    }
-
-    // Event Hook
-    startBtn.addEventListener('click', startGame);
-
-    // Initial Engine Loop Call
-    loop();
-</script>
-
+            });
+        });
+    </script>
 </body>
 </html>
