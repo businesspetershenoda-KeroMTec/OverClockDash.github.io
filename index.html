@@ -70,6 +70,7 @@
             border-radius: 8px;
             border: 2px solid var(--neon-cyan);
             box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+            object-fit: cover;
         }
         .logo-text {
             font-size: 20px;
@@ -132,29 +133,28 @@
             box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
         }
 
-        /* --- Hero Section with Splash Image Background --- */
+        /* --- Hero Section - FIXED SPACING --- */
         .hero {
             position: relative;
-            height: 100vh;
-            min-height: 700px;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 0 20px;
-            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.4), rgba(9, 9, 14, 0.95)), 
-                        url('SPlash2.jpg') no-repeat center center/cover;
+            padding: 120px 20px 60px 20px; /* Increased padding to prevent cutting off elements */
+            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.2), rgba(9, 9, 14, 0.95)), 
+                        url('SPlash2.jpg') no-repeat center top/cover; /* Shifted focus to the top center */
             background-attachment: fixed;
         }
         .hero-content {
             max-width: 850px;
             z-index: 10;
             padding: 40px;
-            background: rgba(18, 11, 32, 0.5);
-            backdrop-filter: blur(8px);
+            background: rgba(18, 11, 32, 0.65);
+            backdrop-filter: blur(12px);
             border-radius: 16px;
-            border: 1px solid rgba(255, 0, 127, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 0, 127, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
         .hero h1 {
             font-size: 52px;
@@ -277,10 +277,13 @@
             overflow: hidden;
             border: 2px solid var(--neon-purple);
             box-shadow: 0 0 25px rgba(157, 78, 221, 0.3);
+            background: #140b24;
         }
         .about-img-frame img {
             width: 100%;
+            height: auto;
             display: block;
+            object-fit: cover;
             transition: transform 0.5s ease;
         }
         .about-img-frame:hover img {
@@ -404,7 +407,7 @@
 
     <header>
         <div class="logo-container">
-            <img src="Game icon (1).jpg" alt="OverClockDash Icon" class="logo-img" onerror="this.style.display='none'">
+            <img src="Game icon (1).png" alt="OverClockDash Icon" class="logo-img">
             <span class="logo-text">OverClockDash</span>
         </div>
         <nav>
@@ -415,7 +418,7 @@
                 <li><a href="#company">Studio</a></li>
             </ul>
         </nav>
-        <button class="nav-btn" onclick="window.location.href='#about'">Play Now</button>
+        <button class="nav-btn" onclick="window.location.href='#about'">Explore</button>
     </header>
 
     <section id="home" class="hero">
@@ -440,7 +443,7 @@
         </div>
         <div class="about-grid">
             <div class="about-img-frame">
-                <img src="Game icon (1).jpg" alt="OverClockDash Jet Boot Runner Gameplay Image" style="background: linear-gradient(135deg, #1f103c, #0a0514); min-height: 350px;">
+                <img src="Game icon (1).png" alt="OverClockDash Jet Boot Runner Gameplay Image">
             </div>
             <div class="about-text">
                 <h3>Thrive on the Grid</h3>
