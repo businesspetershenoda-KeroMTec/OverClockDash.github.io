@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OverClockDash: Runner - Official Website</title>
+    <style>
+        /* --- Cyberpunk Palette & Reset --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --bg-dark: #09090e;
+            --bg-card: rgba(18, 11, 32, 0.75);
+            --neon-cyan: #00ffcc;
+            --neon-pink: #ff007f;
+            --neon-purple: #9d4edd;
+            --text-main: #f0edff;
+            --text-muted: #9a8fbc;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d061a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 5px;
+            border: 2px solid #0d061a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-pink);
+        }
+
+        /* --- Header / Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(9, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(157, 78, 221, 0.2);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 8px;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+        }
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        nav ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-cyan);
+            transition: width 0.3s ease;
+        }
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            background: var(--neon-pink);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+        }
+
+        /* --- Hero Section with Splash Image Background --- */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(to bottom, rgba(9, 9, 14, 0.4), rgba(9, 9, 14, 0.95)), 
+                        url('SPlash2.jpg') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+        .hero-content {
+            max-width: 850px;
+            z-index: 10;
+            padding: 40px;
+            background: rgba(18, 11, 32, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 0, 127, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        .hero h1 {
+            font-size: 52px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.8), 0 0 40px rgba(255, 0, 127, 0.5);
+        }
+        .hero .subtitle {
+            font-size: 18px;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+        .hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 35px auto;
+        }
+        .cta-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+            color: #fff;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4);
+            text-decoration: none;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 0, 127, 0.7);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--neon-cyan);
+            padding: 14px 35px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- Section Shared Style --- */
+        section {
+            padding: 100px 10%;
+            position: relative;
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-title h2 {
+            font-size: 36px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            color: #fff;
+        }
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 3px;
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* --- About Section --- */
+        #about {
+            background: linear-gradient(180deg, rgba(9, 9, 14, 0.95) 0%, rgba(18, 10, 36, 1) 100%);
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; gap: 40px; }
+            header { padding: 15px 20px; }
+            nav { display: none; }
+            .hero h1 { font-size: 36px; }
+        }
+        .about-img-frame {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 25px rgba(157, 78, 221, 0.3);
+        }
+        .about-img-frame img {
+            width: 100%;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .about-img-frame:hover img {
+            transform: scale(1.04);
+        }
+        .about-text h3 {
+            font-size: 24px;
+            color: var(--neon-cyan);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .about-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        /* --- Features Section --- */
+        #features {
+            background: #0f0a1c;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(157, 78, 221, 0.15);
+            padding: 40px 30px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 10px 25px rgba(0, 255, 204, 0.15);
+        }
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .feature-card h3 {
+            font-size: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* --- Company Info Section --- */
+        #company {
+            background: linear-gradient(180deg, #0f0a1c 0%, #06040a 100%);
+            border-top: 1px solid rgba(255, 0, 127, 0.1);
+        }
+        .company-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: rgba(18, 11, 32, 0.4);
+            border-radius: 16px;
+            padding: 50px 40px;
+            border: 1px solid rgba(157, 78, 221, 0.1);
+        }
+        .company-container p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .social-icon {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        .social-icon:hover {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            background: rgba(255, 0, 127, 0.05);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background: #06040a;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #554e6c;
+            font-size: 14px;
+        }
+        footer p {
+            margin-bottom: 10px;
+        }
+        footer a {
+            color: #726894;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.2s;
+        }
+        footer a:hover {
+            color: var(--neon-cyan);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="Game icon (1).jpg" alt="OverClockDash Icon" class="logo-img" onerror="this.style.display='none'">
+            <span class="logo-text">OverClockDash</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#company">Studio</a></li>
+            </ul>
+        </nav>
+        <button class="nav-btn" onclick="window.location.href='#about'">Play Now</button>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>OVERCLOCKDASH: RUNNER</h1>
+            <div class="subtitle">An Endless 3D Adventure</div>
+            <p>
+                Strap into your jet-powered hover boots and accelerate through a vibrant cyberpunk skyline. 
+                Dodge megacity transit networks, evade hostile tracking security drones, and overclock your reflexes 
+                as the pace hits hyper-speed thresholds!
+            </p>
+            <div class="cta-group">
+                <a href="#about" class="btn-primary">Explore Game</a>
+                <a href="#features" class="btn-secondary">View Features</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="section-title">
+            <h2>About The Game</h2>
+        </div>
+        <div class="about-grid">
+            <div class="about-img-frame">
+                <img src="Game icon (1).jpg" alt="OverClockDash Jet Boot Runner Gameplay Image" style="background: linear-gradient(135deg, #1f103c, #0a0514); min-height: 350px;">
+            </div>
+            <div class="about-text">
+                <h3>Thrive on the Grid</h3>
+                <p>
+                    Built on Unity's high-performance 3D engine, <b>OverClockDash: Runner</b> challenges players to survive 
+                    within a dynamically generated procedural synthwave environment. As you progress, the core processing units 
+                    overclock, constantly raising game speed and raising stakes.
+                </p>
+                <p>
+                    Master precision aerial flips, slide beneath low-clearance hyper-truck barricades, and utilize advanced power-up cores 
+                    to break through defense grids in a flawless loop of intense reaction-based action.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="section-title">
+            <h2>Core Features</h2>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Overclock Engine</h3>
+                <p>The speed scales procedurally with your score tier. Adaptive physics keep the gameplay loop tightly tuned around rapid reflex maneuvers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Thruster Boots</h3>
+                <p>Harness jet-propulsion to glide across endless lanes, trigger mid-air adjustments, and execute vertical drops with pinpoint accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>Dynamic Hazard AI</h3>
+                <p>Encounter random multi-lane configurations including heavy security transport trucks, sweeping drones, and high-voltage grid lines.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="company">
+        <div class="section-title">
+            <h2>The Studio</h2>
+        </div>
+        <div class="company-container">
+            <p>
+                We are an independent game studio dedicated to crafting polished, addictive arcade experiences with stunning 
+                cyberpunk aesthetics and immersive modern interactive engineering loops. Built by players, for players.
+            </p>
+            <div class="social-links">
+                <a href="https://github.com" class="social-icon" target="_blank">GitHub Project</a>
+                <a href="#" class="social-icon">Community Discord</a>
+                <a href="#" class="social-icon">Dev Logs</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 OverClockDash Studio. All Rights Reserved.</p>
+        <div>
+            <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script>
+        const sections = document.querySelectorAll('section');
+        const navLi = document.querySelectorAll('nav ul li a');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLi.forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
